@@ -10,15 +10,15 @@ spec:
     token:
       valueFrom:
         secretKeyRef:
-          name: git-token
+          name: yxzzzxh-git-token
           key: token
   jobs:
     postSubmit:
       - name: build-and-push
         image: quay.io/buildah/stable
         script: |
-          buildah bud --tls-verify=false --storage-driver=vfs --format docker -f ./payment/Dockerfile -t $IMAGE_URL:${CI_HEAD_REF#refs/heads/} .
-          buildah push --tls-verify=false --storage-driver=vfs $IMAGE_URL:${CI_HEAD_REF#refs/tags/} docker://$IMAGE_URL:${CI_HEAD_REF#refs/heads/}
+          buildah bud --tls-verify=false --storage-driver=vfs --format docker -f ./payment/Dockerfile -t $IMAGE_URL:yjh .
+          buildah push --tls-verify=false --storage-driver=vfs $IMAGE_URL:${CI_HEAD_REF#refs/tags/} docker://$IMAGE_URL:yjh
         env:
           - name: IMAGE_URL
             value: tmaxcloudck/example-payment
