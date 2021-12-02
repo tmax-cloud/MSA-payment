@@ -7,7 +7,7 @@ upstream:
 
 spring:
   application:
-    name: {$SERVICE_NAME}
+    name: ${SERVICE_NAME}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}/${DB_NAME}?useSSL=false
@@ -15,12 +15,12 @@ spring:
     password: ${DB_PASSWORD}
     hikari:
       initialization-fail-timeout: 0
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-    generate-ddl: true
-    show-sql: true
-    hibernate:
-      ddl-auto: create
+    jpa:
+      database-platform: org.hibernate.dialect.MySQL5Dialect
+      generate-ddl: true
+      show-sql: true
+      hibernate:
+        ddl-auto: create
 
 opentracing:
   jaeger:
