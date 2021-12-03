@@ -48,7 +48,7 @@ spec:
         script: |
           mkdir target
           cp $(workspaces.payment-workspace.path)/payment-0.0.1-SNAPSHOT.jar ./target/
-          buildah bud --tls-verify=false --storage-driver=vfs --format docker -f ./payment/Dockerfile -t $IMAGE_URL:yjh .
+          buildah bud --tls-verify=false --storage-driver=vfs --format docker -f Dockerfile -t $IMAGE_URL:yjh .
           buildah push --tls-verify=false --storage-driver=vfs $IMAGE_URL:yjh docker://$IMAGE_URL:yjh
         env:
           - name: IMAGE_URL
