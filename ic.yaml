@@ -26,4 +26,4 @@ spec:
           privileged: true
         when:
           branch:
-            - main
+            - feat/cicd
