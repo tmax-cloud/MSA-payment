@@ -35,7 +35,6 @@ spec:
       - name: maven-package
         image: docker.io/maven:3.8-jdk-11
         script: |
-          cd payment
           mvn package
           cp target/$JAR_NAME $(workspaces.payment-workspace.path)/$JAR_NAME
         env: 
