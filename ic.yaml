@@ -1,3 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: payment-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+---
 apiVersion: cicd.tmax.io/v1
 kind: IntegrationConfig
 metadata:
@@ -12,18 +24,38 @@ spec:
         secretKeyRef:
           name: yxzzzxh-git-token
           key: token
+  workspaces:
+    - name : payment-workspace
+      persistentVolumeClaim:
+        claimName: payment-pvc
   jobs:
     postSubmit:
+      - name: maven-package
+        image: docker.io/maven:3.8-jdk-11
+        script: |
+          cd payment
+          mvn package
+          cp target/$JAR_NAME $(workspaces.payment-workspace.path)/$JAR_NAME
+        env: 
+          - name: JAR_NAME
+            value : payment-0.0.1-SNAPSHOT.jar
+        when:
+          branch:
+            - feat/cicd
       - name: build-and-push
         image: quay.io/buildah/stable
         script: |
+          mkdir payment/target
+          cp $(workspaces.payment-workspace.path)/payment-0.0.1-SNAPSHOT.jar ./payment/target/
           buildah bud --tls-verify=false --storage-driver=vfs --format docker -f ./payment/Dockerfile -t $IMAGE_URL:yjh .
-          buildah push --tls-verify=false --storage-driver=vfs $IMAGE_URL:${CI_HEAD_REF#refs/tags/} docker://$IMAGE_URL:yjh
+          buildah push --tls-verify=false --storage-driver=vfs $IMAGE_URL:yjh docker://$IMAGE_URL:yjh
         env:
           - name: IMAGE_URL
             value: tmaxcloudck/example-payment
         securityContext:
           privileged: true
+        after:
+          - maven-package
         when:
           branch:
             - feat/cicd
