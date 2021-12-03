@@ -28,6 +28,8 @@ spec:
     - name : payment-workspace
       persistentVolumeClaim:
         claimName: payment-pvc
+  secrets:
+    - name : tmaxcloudck-docker-hub-secret
   jobs:
     postSubmit:
       - name: maven-package
