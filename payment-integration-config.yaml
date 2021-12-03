@@ -47,12 +47,16 @@ spec:
         image: quay.io/buildah/stable
         script: |
           mkdir target
-          cp $(workspaces.payment-workspace.path)/payment-0.0.1-SNAPSHOT.jar ./target/
-          buildah bud --tls-verify=false --storage-driver=vfs --format docker -f Dockerfile -t $IMAGE_URL:yjh .
-          buildah push --tls-verify=false --storage-driver=vfs $IMAGE_URL:yjh docker://$IMAGE_URL:yjh
+          cp $(workspaces.payment-workspace.path)/$JAR_NAME ./target/
+          buildah bud --tls-verify=false --storage-driver=vfs --format docker -f Dockerfile -t $IMG_URL:$IMG_VERSION .
+          buildah push --tls-verify=false --storage-driver=vfs $IMG_URL:$IMG_VERSION docker://$IMG_URL:$IMG_VERSION
         env:
-          - name: IMAGE_URL
+          - name: IMG_URL
             value: tmaxcloudck/example-payment
+          - name: IMG_VERSION
+            value: latest
+          - name: JAR_NAME
+            value: payment-0.0.1-SNAPSHOT.jar
         securityContext:
           privileged: true
         after:
